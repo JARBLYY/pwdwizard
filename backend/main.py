@@ -4,4 +4,6 @@ app = FastAPI()
 
 @app.get("/")
 def home():
-    return {"message": "pwdwizard is running"} 
+    return {"message": "pwdwizard backend is runningggggg"} 
+    return {"message": "testtestg"} 
+    
