@@ -5,12 +5,12 @@ def create_db():
     c = conn.cursor()
 
     c.execute("""
-    CREATE TABLE IF NOT EXISTS passwords (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        website TEXT,
-        username TEXT,
-        password BLOB
-    )
+        CREATE TABLE IF NOT EXISTS passwords (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            website TEXT NOT NULL,
+            username TEXT NOT NULL,
+            password BLOB NOT NULL
+        )
     """)
 
     conn.commit()
