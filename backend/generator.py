@@ -6,7 +6,7 @@ def generate_password(length=12):
     password = ''.join(secrets.choice(characters) for _ in range(length))
     return password
 
-
+                       
 if __name__ == "__main__":
     password_length = 12
     password = generate_password(password_length)

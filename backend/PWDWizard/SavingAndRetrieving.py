@@ -26,3 +26,4 @@ def get_passwords(key):
         print(f"Website: {website} | Username: {username} | Password: {decrypted_pw}")
 
     conn.close()
+
