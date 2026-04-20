@@ -1,6 +1,7 @@
 import mysql.connector
 import os 
 
+
 def get_connection():
     return mysql.connector.connect(
         host="db",
@@ -32,6 +33,7 @@ def create_db():
     """)
 
     conn.commit()
+    
     c.close()
     conn.close()
 
