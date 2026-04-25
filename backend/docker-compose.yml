@@ -14,7 +14,7 @@ services:
     build: .
     depends_on:
       - db
-    stdin_open: true
-    tty: true
+    ports:
+      - "5000:5000"
     volumes:
     - .:/app
