@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PWDWizard — Vault</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface2: #1a1a26;
+      --border: #2a2a3d;
+      --accent: #7c5cfc;
+      --accent2: #00e5bf;
+      --text: #e8e8f0;
+      --muted: #6b6b8a;
+      --error: #ff4d6d;
+      --success: #00e5bf;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* subtle grid bg */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(124,92,252,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,92,252,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* nav */
+    nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,10,15,0.8);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .logo span { color: var(--accent2); }
+
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+
+    .btn-primary {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, var(--accent), #5a3de8);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 16px rgba(124,92,252,0.3);
+      transition: opacity 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover { opacity: 0.9; box-shadow: 0 6px 24px rgba(124,92,252,0.45); }
+
+    .btn-ghost {
+      padding: 10px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-ghost:hover { border-color: var(--accent); color: var(--text); }
+
+    /* main content */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    .page-header {
+      margin-bottom: 36px;
+    }
+
+    .page-header h1 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 6px;
+    }
+
+    .page-header h1 span { color: var(--accent2); }
+
+    .page-header p {
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+    }
+
+    /* stats bar */
+    .stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      flex: 1;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--accent2);
+      font-family: 'Space Mono', monospace;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    /* flash messages */
+    .flash {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'Space Mono', monospace;
+      margin-bottom: 20px;
+    }
+    .flash.error { background: rgba(255,77,109,0.12); border: 1px solid rgba(255,77,109,0.3); color: var(--error); }
+    .flash.success { background: rgba(0,229,191,0.1); border: 1px solid rgba(0,229,191,0.3); color: var(--success); }
+
+    /* password table */
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .table-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      padding: 14px 24px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .pw-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      transition: background 0.15s;
+      animation: rowIn 0.3s ease both;
+    }
+
+    .pw-row:last-child { border-bottom: none; }
+    .pw-row:hover { background: var(--surface2); }
+
+    @keyframes rowIn {
+      from { opacity: 0; transform: translateX(-8px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .pw-row:nth-child(1) { animation-delay: 0.05s; }
+    .pw-row:nth-child(2) { animation-delay: 0.1s; }
+    .pw-row:nth-child(3) { animation-delay: 0.15s; }
+    .pw-row:nth-child(4) { animation-delay: 0.2s; }
+    .pw-row:nth-child(5) { animation-delay: 0.25s; }
+
+    .website-cell {
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .username-cell {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .password-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pw-masked {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 2px;
+      color: var(--muted);
+    }
+
+    .pw-revealed {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      color: var(--accent2);
+      display: none;
+      word-break: break-all;
+    }
+
+    .toggle-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--muted);
+      padding: 4px 10px;
+      font-size: 11px;
+      font-family: 'Space Mono', monospace;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .toggle-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+
+    .copy-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--muted);
+      padding: 4px 10px;
+      font-size: 11px;
+      font-family: 'Space Mono', monospace;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .copy-btn.copied { border-color: var(--success); color: var(--success); }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--muted);
+    }
+
+    .empty-state .emoji { font-size: 40px; margin-bottom: 16px; }
+    .empty-state p { font-family: 'Space Mono', monospace; font-size: 13px; }
+    .empty-state a { color: var(--accent2); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <div class="logo-icon">🔐</div>
+      PWD<span>Wizard</span>
+    </div>
+    <div class="nav-actions">
+      <a href="/add" class="btn-primary">+ Add Password</a>
+      <a href="/logout" class="btn-ghost">Logout</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Your <span>Vault</span></h1>
+      <p>// {{ passwords|length }} credential(s) stored and encrypted</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-value">{{ passwords|length }}</div>
+        <div class="stat-label">Saved Passwords</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">AES</div>
+        <div class="stat-label">Encryption</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">100k</div>
+        <div class="stat-label">PBKDF2 Iterations</div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      {% if passwords %}
+        <div class="table-header">
+          <span>Website</span>
+          <span>Username</span>
+          <span>Password</span>
+        </div>
+        {% for pw in passwords %}
+        <div class="pw-row">
+          <div class="website-cell">{{ pw.website }}</div>
+          <div class="username-cell">{{ pw.username }}</div>
+          <div class="password-cell">
+            <span class="pw-masked" id="mask-{{ loop.index }}">••••••••••</span>
+            <span class="pw-revealed" id="reveal-{{ loop.index }}">{{ pw.password }}</span>
+            <button class="toggle-btn" onclick="togglePw({{ loop.index }}, '{{ pw.password | e }}')">show</button>
+            <button class="copy-btn" id="copy-{{ loop.index }}" onclick="copyPw('{{ pw.password | e }}', {{ loop.index }})">copy</button>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <div class="emoji">🗄️</div>
+          <p>No passwords yet. <a href="/add">Add your first one →</a></p>
+        </div>
+      {% endif %}
+    </div>
+  </main>
+
+  <script>
+    function togglePw(idx, pw) {
+      const mask = document.getElementById('mask-' + idx);
+      const reveal = document.getElementById('reveal-' + idx);
+      const btn = reveal.previousElementSibling.previousElementSibling;
+      if (reveal.style.display === 'none' || reveal.style.display === '') {
+        mask.style.display = 'none';
+        reveal.style.display = 'block';
+        btn.textContent = 'hide';
+      } else {
+        mask.style.display = 'block';
+        reveal.style.display = 'none';
+        btn.textContent = 'show';
+      }
+    }
+
+    function copyPw(pw, idx) {
+      navigator.clipboard.writeText(pw).then(() => {
+        const btn = document.getElementById('copy-' + idx);
+        btn.textContent = 'copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
