@@ -12,10 +12,18 @@ def get_connection():
     )
 
 
-def create_db():
-    conn = get_connection()
-    c = conn.cursor()
 
+
+def create_db():
+    return mysql.connector.connect(
+        host=os.getenv("MYSQLHOST", "db"),
+        port=int(os.getenv("MYSQLPORT", 3306)),
+        user=os.getenv("MYSQLUSER", "root"),
+        password=os.getenv("MYSQL_ROOT_PASSWORD", "password"),
+    )
+    C = conn.cursor()
+    C.execute("CREATE DATABASE IF NOT EXISTS pwdwizard")
+    c.execute("USE pwdwizard")
     c.execute("""
         CREATE TABLE IF NOT EXISTS passwords (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -25,15 +33,7 @@ def create_db():
         )
     """)
 
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS settings (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            salt BLOB NOT NULL
-        )
-    """)
-
     conn.commit()
-    
     c.close()
     conn.close()
 
