@@ -4,11 +4,11 @@ import os
 
 def get_connection():
     return mysql.connector.connect(
-        host=os.getenv("DB_HOST", "db"),
-        port=os.getenv("DB_PORT", 3306),
-        user=os.getenv("DB_USER", "root"),
-        password=os.getenv("DB_PASSWORD", "password"),
-        database=os.getenv("DB_NAME", "pwdwizard")
+        host=os.getenv("MYSQLHOST", "db"),
+        port=os.getenv("MYSQLPORT", 3306),
+        user=os.getenv("MYSQLUSER", "root"),
+        password=os.getenv("MYSQLPASSWORD", "password"),
+        database=os.getenv("MYSQLDATABASE", "pwdwizard")
     )
 
 
