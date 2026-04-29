@@ -1,35 +1,33 @@
 import mysql.connector
-import os 
+import os
 
 
 def get_connection():
     return mysql.connector.connect(
-        host=os.getenv("MYSQLHOST", "db"),
-        port=os.getenv("MYSQLPORT", 3306),
+        host=os.getenv("MYSQLHOST"),
+        port=int(os.getenv("MYSQLPORT", 3306)),
         user=os.getenv("MYSQLUSER", "root"),
-        password=os.getenv("MYSQL_ROOT_PASSWORD", "password"),
-        database=os.getenv("MYSQLDATABASE", "pwdwizard")
+        password=os.getenv("MYSQL_ROOT_PASSWORD"),
+        database=os.getenv("MYSQLDATABASE", "railway")
     )
-
-
 
 
 def create_db():
-    return mysql.connector.connect(
-        host=os.getenv("MYSQLHOST", "db"),
-        port=int(os.getenv("MYSQLPORT", 3306)),
-        user=os.getenv("MYSQLUSER", "root"),
-        password=os.getenv("MYSQL_ROOT_PASSWORD", "password"),
-    )
-    C = conn.cursor()
-    C.execute("CREATE DATABASE IF NOT EXISTS pwdwizard")
-    c.execute("USE pwdwizard")
+    conn = get_connection()
+    c = conn.cursor()
+
     c.execute("""
         CREATE TABLE IF NOT EXISTS passwords (
             id INT AUTO_INCREMENT PRIMARY KEY,
             website VARCHAR(255) NOT NULL,
             username VARCHAR(255) NOT NULL,
             password BLOB NOT NULL
+        )
+    """)
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS settings (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            salt BLOB NOT NULL
         )
     """)
 
@@ -48,7 +46,7 @@ def load_or_create_salt():
     if result:
         salt = result[0]
     else:
-        salt = os.urandom(16)  
+        salt = os.urandom(16)
         c.execute("INSERT INTO settings (salt) VALUES (%s)", (salt,))
         conn.commit()
 
