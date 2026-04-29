@@ -68,15 +68,12 @@
     .logo-icon {
       width: 34px;
       height: 34px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
+      object-fit: contain;
+      display: block;
     }
 
-    .logo span { color: var(--accent2); }
+    .logo span { color: #4a9eff;; }
+         
 
     .nav-actions { display: flex; gap: 12px; align-items: center; }
 
@@ -309,7 +306,7 @@
 <body>
   <nav>
     <div class="logo">
-      <div class="logo-icon">🔐</div>
+      <img src="{{ url_for('static', filename='images/PWDWizard_logo.png') }}" alt="PWDWizard logo">
       PWD<span>Wizard</span>
     </div>
     <div class="nav-actions">
