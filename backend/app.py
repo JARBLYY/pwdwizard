@@ -3,6 +3,7 @@ from PWDWizard.MasterPassword import get_key_from_password
 from PWDWizard.MySQL import create_db, load_or_create_salt
 from PWDWizard.SavingAndRetrieving import save_password, save_generated_password, get_passwords
 import mysql.connector
+import traceback
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-key-change-in-prod"
@@ -29,8 +30,9 @@ def login():
             session["key"] = list(key)  # store bytes as list for JSON serialization
             return redirect(url_for("dashboard"))
         except Exception as e:
-            flash("Could not connect to database. Is it running?", "error")
-            return render_template("login.html")
+            import traceback
+            traceback
+            flash(f"Error processing master password: {str(e)}", "error")
     return render_template("login.html")
 
 
