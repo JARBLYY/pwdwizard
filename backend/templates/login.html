@@ -13,7 +13,7 @@
       --accent: #4a9eff;;
       --accent2: #4a9eff;;
       --text: #e8e8f0;
-      --muted: #6b6b8a;
+      --muted:#3935ff;
       --error: #ff4d6d;
       --success: #4a9eff;;
     }
@@ -38,8 +38,8 @@
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(124,92,252,0.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(124,92,252,0.07) 1px, transparent 1px);
+        linear-gradient(rgba(13, 33, 207, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(13, 33, 207, 0.07) 1px, transparent 1px);
       background-size: 40px 40px;
       animation: gridShift 20s linear infinite;
       z-index: 0;
@@ -56,7 +56,7 @@
       position: fixed;
       width: 500px;
       height: 500px;
-      background: radial-gradient(circle, rgba(124,92,252,0.15) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(13, 33, 207, 0.5) 0%, transparent 70%);
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -156,7 +156,7 @@
 
     input[type="password"]:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(124,92,252,0.15);
+      box-shadow: 0 0 0 3px rgba(13, 33, 207, 0.5);
     }
 
     .btn {
@@ -173,10 +173,10 @@
       letter-spacing: 0.5px;
       cursor: pointer;
       transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
-      box-shadow: 0 4px 20px rgba(124,92,252,0.35);
+      box-shadow: 0 4px 20px rgba(13, 33, 207, 0.5);
     }
 
-    .btn:hover { opacity: 0.92; box-shadow: 0 6px 28px rgba(124,92,252,0.5); }
+    .btn:hover { opacity: 0.92; box-shadow: 0 6px 28px rgba(13, 33, 207, 0.5); }
     .btn:active { transform: scale(0.98); }
 
     .flash {
@@ -210,8 +210,7 @@
     <div class="logo-icon">
   <img src="{{ url_for('static', filename='images/PWDWizard_logo.png') }}" alt="PWDWizard logo">
 </div>
-      <div class="logo-text">PWD<span>Wizard</span></div>
-    </div>
+
 
     <h1>Welcome back.</h1>
     <p class="subtitle"> Enter master password to unlock vault</p>
