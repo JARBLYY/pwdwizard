@@ -13,27 +13,32 @@ def get_connection():
 
 
 def create_db():
-    conn = get_connection()
-    c = conn.cursor()
+    try:
+        conn = get_connection()
+        print(f"✓ Connected to MySQL at {os.getenv('MYSQLHOST')}")
+        c = conn.cursor()
 
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS passwords (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            website VARCHAR(255) NOT NULL,
-            username VARCHAR(255) NOT NULL,
-            password BLOB NOT NULL
-        )
-    """)
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS settings (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            salt BLOB NOT NULL
-        )
-    """)
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS passwords (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                website VARCHAR(255) NOT NULL,
+                username VARCHAR(255) NOT NULL,
+                password BLOB NOT NULL
+            )
+        """)
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS settings (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                salt BLOB NOT NULL
+            )
+        """)
 
-    conn.commit()
-    c.close()
-    conn.close()
+        conn.commit()
+        print("✓ Database and tables created successfully.")
+        c.close()
+        conn.close()
+    except Exception as e:
+        print(f"✗ Database connection failed: {str(e)}")
 
 
 def load_or_create_salt():
