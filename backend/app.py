@@ -31,7 +31,7 @@ def login():
             return redirect(url_for("dashboard"))
         except Exception as e:
             import traceback
-            traceback
+            traceback.print_exc()
             flash(f"Error processing master password: {str(e)}", "error")
     return render_template("login.html")
 
@@ -108,6 +108,7 @@ def _get_passwords_list(key):
     return results
 
 
+create_db()
+
 if __name__ == "__main__":
-    create_db()
     app.run(debug=True, host="0.0.0.0", port=5000)
