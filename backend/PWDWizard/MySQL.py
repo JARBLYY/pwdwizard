@@ -19,17 +19,22 @@ def create_db():
         c = conn.cursor()
 
         c.execute("""
-            CREATE TABLE IF NOT EXISTS passwords (
+            CREATE TABLE IF NOT EXISTS users (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                website VARCHAR(255) NOT NULL,
-                username VARCHAR(255) NOT NULL,
-                password BLOB NOT NULL
+                username VARCHAR(255) NOT NULL UNIQUE,
+                password_hash VARCHAR(255) NOT NULL,
+                salt BLOB NOT NULL
             )
         """)
+
         c.execute("""
-            CREATE TABLE IF NOT EXISTS settings (
+            CREATE TABLE IF NOT EXISTS passwords (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                salt BLOB NOT NULL
+                user_id INT NOT NULL,
+                website VARCHAR(255) NOT NULL,
+                username VARCHAR(255) NOT NULL,
+                password BLOB NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             )
         """)
 
@@ -41,20 +46,31 @@ def create_db():
         print(f"✗ Database connection failed: {str(e)}")
 
 
-def load_or_create_salt():
+def create_user(username, password_hash, salt):
+    """Create a new user. Returns user_id, or None if username taken."""
     conn = get_connection()
     c = conn.cursor()
-
-    c.execute("SELECT salt FROM settings LIMIT 1")
-    result = c.fetchone()
-
-    if result:
-        salt = result[0]
-    else:
-        salt = os.urandom(16)
-        c.execute("INSERT INTO settings (salt) VALUES (%s)", (salt,))
+    try:
+        c.execute(
+            "INSERT INTO users (username, password_hash, salt) VALUES (%s, %s, %s)",
+            (username, password_hash, salt)
+        )
         conn.commit()
+        user_id = c.lastrowid
+        return user_id
+    except mysql.connector.IntegrityError:
+        return None
+    finally:
+        c.close()
+        conn.close()
 
+
+def get_user(username):
+    """Get user by username. Returns (id, password_hash, salt) or None."""
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute("SELECT id, password_hash, salt FROM users WHERE username = %s", (username,))
+    result = c.fetchone()
     c.close()
     conn.close()
-    return salt
+    return result
