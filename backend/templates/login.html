@@ -221,14 +221,18 @@
       {% endfor %}
     {% endwith %}
 
-    <form method="POST">
-      <label for="master_password">Master Password</label>
-      <input type="password" id="master_password" name="master_password" placeholder="••••••••••••" autofocus required />
-      <button type="submit" class="btn">Unlock Vault →</button>
-    </form>
+<form method="POST">
+  <label for="username">Username</label>
+  <input type="text" id="username" name="username" placeholder="your username" autofocus required style="width:100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Space Mono', monospace; font-size: 15px; padding: 14px 16px; margin-bottom: 18px;" />
 
-    <div class="divider"></div>
-    <p class="hint">Your key is safe with the Wizard.</p>
+  <label for="master_password">Master Password</label>
+  <input type="password" id="master_password" name="master_password" placeholder="••••••••••••" required />
+  <button type="submit" class="btn">Unlock Vault →</button>
+</form>
+
+<div class="divider"></div>
+<p class="hint">Don't have a vault yet? <a href="/signup" style="color: var(--accent); text-decoration: none; font-weight: 700;">Create one</a></p>
+
   </div>
 </body>
 </html>
