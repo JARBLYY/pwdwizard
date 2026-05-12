@@ -8,7 +8,7 @@ import os
 import traceback
 
 app = Flask(__name__)
-app.secret_key = "dev-secret-key-change-in-prod"
+app.secret_key = "SECRET_KEY"
 
 
 def hash_password(password, salt):
