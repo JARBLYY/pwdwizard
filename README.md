@@ -1,4 +1,4 @@
-# 🔐 PWDWizard
+PWDWizard
 
 A self-hosted password manager built with Python, Flask, and MySQL. Store and retrieve encrypted credentials through a clean web UI — no third-party vaults, no cloud dependency, your data stays yours.
 
@@ -56,19 +56,3 @@ backend/
 ```
 
 ---
-
-## ⚠️ Security notes
-
-- The `SECRET_KEY` in `app.py` should be changed to a strong random value before deploying
-- MySQL credentials in `docker-compose.yml` are defaults — update them for any non-local deployment
-- This project is built for learning/personal use; a production deployment would warrant a full security audit
-
----
-
-## Roadmap
-
-- [ ] FastAPI REST backend (Round 2)
-- [ ] Cloud deployment (Render)
-- [ ] Password strength indicator
-- [ ] Search / filter vault entries
-- [ ] Per-entry tags / categories
